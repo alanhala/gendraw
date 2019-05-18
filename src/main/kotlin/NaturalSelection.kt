@@ -2,16 +2,16 @@ import kotlin.random.Random
 
 class NaturalSelection {
     fun getParent(population: List<Individual>): Individual {
-        val bias = population.size * 0.6
-        var i = 0
-        population.forEach { individual ->
-            if (i > 0) {
-                if (Random.nextDouble() <= (population.size - i) / (population.size.toDouble() + bias)) {
-                    return individual
-                }
-            }
-            i++
+        val sum = population.sumBy { it.fitness }
+        val populationWithProbability = population.map { Pair(it, it.fitness.toDouble() / sum.toDouble()) }
+        var index = 0
+        var r = Random.nextDouble()
+
+        while (r > 0) {
+            r -= populationWithProbability[index].second
+            index++
         }
-        return population.first()
+        index--
+        return populationWithProbability[index].first
     }
 }

@@ -1,9 +1,10 @@
-import java.awt.image.BufferedImage
+
 import javax.imageio.ImageIO
 
 object Configuration {
-    val dnaSize = 100
-    val populationSize = 20
+    val dnaSize = 50
+    val populationSize = 500
+    val mutationProbability = 0.4
     val targetImage = ImageIO.read(Thread.currentThread().contextClassLoader.getResource("square.png"))
     val width = targetImage.width
     val height = targetImage.height

@@ -23,11 +23,16 @@ class Population {
     }
 
     fun generateNewIndividuals(): List<DNA> {
-        return (0 until (Configuration.populationSize - 1)).map {
-            val one = NaturalSelection().getParent(individuals)
-            val two = NaturalSelection().getParent(individuals)
-            val pair = Pair(one, two)
-            Crossover.perform(pair)
+        val newDnas = mutableListOf(fittest().dna)
+        val fittests = individuals.subList(0, 10)
+        (0 until (Configuration.populationSize - 2)).map {
+            val pair = Pair(fittests.random(), fittests.random())
+            newDnas.add(Crossover.perform(pair))
         }
+        return newDnas
+    }
+
+    fun reachedMaxFittnes(): Boolean {
+        return fittest().fitness >= fitnessFunction.maxFittnes()
     }
 }

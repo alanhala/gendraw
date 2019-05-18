@@ -1,6 +1,7 @@
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.image.BufferedImage
+import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.JPanel
@@ -27,12 +28,20 @@ class GeneticDraw {
         frame.setSize(Configuration.width, Configuration.height)
         frame.isVisible = true
 
+        var i = 0
+
         val panel = object : JPanel() {
             override fun paintComponent(g: Graphics) {
                 super.paintComponent(g)
                 population?.let {
                     it.fittest().dna.draw(fittestGraphics)
                     g.drawImage(fittestCanvas, 0, 0, Configuration.width, Configuration.height, this)
+
+                    if (i % 2 == 0) {
+                        val file = File("./tmp/images/evolved_$i.png")
+                        file.parentFile.mkdirs()
+                        ImageIO.write(fittestCanvas, "png", file)
+                    }
                 }
             }
         }
@@ -40,9 +49,7 @@ class GeneticDraw {
         frame.add(panel)
         panel.revalidate()
 
-        var i = 0
-
-        while (true) {
+        while (if (population == null) true else !population!!.reachedMaxFittnes()) {
             population = Population(testCanvas, testGraphics, dnaList)
 
             println("$i, ${population!!.fittest().fitness}")

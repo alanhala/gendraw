@@ -1,5 +1,7 @@
+import shapes.Ellipse
+import shapes.Rectangle
 import shapes.Shape
-import shapes.Triangle
+import shapes.ShapeType
 import java.awt.Color
 import java.awt.Graphics
 import kotlin.random.Random
@@ -13,11 +15,10 @@ class DNA {
 
     constructor() {
         genes = (0 until Configuration.dnaSize).map {
-            val p1 = Pair(Random.nextInt(Configuration.width), Random.nextInt(Configuration.height))
-            val p2 = Pair(Random.nextInt(Configuration.width), Random.nextInt(Configuration.height))
-            val p3 = Pair(Random.nextInt(Configuration.width), Random.nextInt(Configuration.height))
-            val color = Color(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255), Random.nextInt(255))
-            Triangle(listOf(p1, p2, p3), color)
+            when (ShapeType.values().random()) {
+                ShapeType.ELLIPSE -> newEllipse()
+                ShapeType.RECTANGLE -> newRectangle()
+            }
         }
     }
 
@@ -27,4 +28,21 @@ class DNA {
         genes.forEach { gene -> gene.draw(graphics) }
     }
 
+    private fun newRectangle(): Shape {
+        val x = Random.nextInt(Configuration.width)
+        val y = Random.nextInt(Configuration.height)
+        val w = Utils.bound(Random.nextInt(Configuration.width / 4), 2, Configuration.width - x)
+        val h = Utils.bound(Random.nextInt(Configuration.height / 4), 2, Configuration.height - y)
+        val color = Color(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255), Random.nextInt(255))
+        return Rectangle(x, y, w, h, color)
+    }
+
+    private fun newEllipse(): Shape {
+        val x = Random.nextInt(Configuration.width)
+        val y = Random.nextInt(Configuration.height)
+        val w = Utils.bound(Random.nextInt(Configuration.width / 4), 2, Configuration.width - x)
+        val h = Utils.bound(Random.nextInt(Configuration.height / 4), 2, Configuration.height - y)
+        val color = Color(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255), Random.nextInt(255))
+        return Ellipse(x, y, w, h, color)
+    }
 }
